@@ -14,6 +14,7 @@ function getDownloadUrl(version) {
 async function install(version) {
   const toolJar = await tc.downloadTool(getDownloadUrl(version));
   core.info('Successfully installed '+TOOL_NAME+" version "+version);
+  return toolJar;
 }
 
 async function getCachedToolJar(version) {
