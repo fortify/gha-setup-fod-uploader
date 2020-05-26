@@ -6,7 +6,9 @@ const INPUT_VERSION = 'version';
 const TOOL_NAME = 'FoDUpload';
 
 function getDownloadUrl(version) {
-	return 'https://github.com/fod-dev/fod-uploader-java/releases/download/'+version+'/FodUpload.jar';
+	return version==='latest' 
+	  ? https://github.com/fod-dev/fod-uploader-java/releases/latest/download/FodUpload.jar';
+	  : https://github.com/fod-dev/fod-uploader-java/releases/download/'+version+'/FodUpload.jar';
 }
 
 async function download(url) {
