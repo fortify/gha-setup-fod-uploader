@@ -11,28 +11,27 @@ function getDownloadUrl(version) {
 	  : 'https://github.com/fod-dev/fod-uploader-java/releases/download/'+version+'/FodUpload.jar';
 }
 
-async function download(url) {
-  core.debug("Downloading "+url);
-  const toolJar = await tc.downloadTool(url);
-  core.debug("Downloaded to "+toolJar);
-  return toolJar;
-}
-
-async function installAndCache(version) {
-  const toolJar = await download(getDownloadUrl(version));
-  core.debug("Downloaded, caching "+toolJar);
-  const cachedToolJar = await tc.cacheFile(toolJar, TOOL_NAME+'.jar', TOOL_NAME, version);
-  core.debug("Cached: "+cachedToolJar);
-  return cachedToolJar;
+async function install(version) {
+  const toolJar = await tc.downloadTool(getDownloadUrl(version));
+  core.info('Successfully installed '+TOOL_NAME+" version "+version);
 }
 
 async function getCachedToolJar(version) {
-  var cachedToolJar = version==='latest' ? null : tc.find(TOOL_NAME, version);
+  var cachedToolJar = tc.find(TOOL_NAME, version);
   if (!cachedToolJar) {
-    cachedToolJar = await installAndCache(version);
-    core.info('Successfully installed '+TOOL_NAME+" version "+version);
+    cachedToolJar = await install(version);
+	cachedToolJar = await tc.cacheFile(toolJar, TOOL_NAME+'.jar', TOOL_NAME, version);
   }
   return cachedToolJar;
+}
+
+async function getToolJar(version) {
+  const skipCache = version==='latest';
+  if ( skipCache ) {
+	return await install(version);
+  } else {
+    return await getCachedToolJar(version);
+  }
 }
 
 async function run() {
