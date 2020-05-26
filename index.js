@@ -14,14 +14,14 @@ function getDownloadUrl(version) {
 async function download(url) {
   core.debug("Downloading "+url);
   const toolJar = await tc.downloadTool(url);
-  core.debug("Downloaded");
+  core.debug("Downloaded to "+toolJar);
   return toolJar;
 }
 
 async function installAndCache(version) {
   const toolJar = await download(getDownloadUrl(version));
   core.debug("Downloaded, caching "+toolJar);
-  const cachedToolJar = await tc.cacheFile(toolJar, TOOL_NAME, version);
+  const cachedToolJar = await tc.cacheFile(toolJar, TOOL_NAME+'.jar', TOOL_NAME, version);
   core.debug("Cached: "+cachedToolJar);
   return cachedToolJar;
 }
