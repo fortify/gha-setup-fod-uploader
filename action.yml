@@ -1,0 +1,11 @@
+name: 'Setup Fortify on Demand Uploader'
+description: 'Setup Fortify on Demand Uploader'
+author: 'Ruud Senden'
+inputs:
+  version:
+    description: 'FoDUploader version to use'
+    required: true
+    default: latest
+runs:
+  using: 'node12'
+  main: 'index.js'

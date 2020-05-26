@@ -1,0 +1,25 @@
+{
+  "name": "setup-fod-uploader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fortify-actions/setup-fod-uploader.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fortify-actions/setup-fod-uploader/issues"
+  },
+  "homepage": "https://github.com/fortify-actions/setup-fod-uploader#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/tool-cache": "^1.5.5",
+    "path": "^0.12.7"
+  }
+}
