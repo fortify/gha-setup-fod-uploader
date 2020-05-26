@@ -39,7 +39,7 @@ async function run() {
   try {
 	core.startGroup('Setup FoDUploader');
 	const version = core.getInput(INPUT_VERSION);
-	const toolJar = await getCachedToolJar(version);
+	const toolJar = await getToolJar(version);
     core.exportVariable('FOD_UPLOAD_JAR', toolJar);
 	core.exportVariable('FOD_UPLOAD_CMD', 'java -jar '+toolJar);
   } catch (error) {
