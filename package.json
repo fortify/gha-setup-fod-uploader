@@ -1,7 +1,7 @@
 {
   "name": "setup-fod-uploader",
   "version": "1.0.0",
-  "description": "",
+  "description": "GitHub Action for setting up FoD Upload Utility",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,9 +10,13 @@
     "type": "git",
     "url": "git+https://github.com/fortify-actions/setup-fod-uploader.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "Fortify",
+    "FoD",
+    "security"
+  ],
+  "author": "Ruud Senden",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/fortify-actions/setup-fod-uploader/issues"
   },
