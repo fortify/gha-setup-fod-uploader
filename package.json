@@ -2,9 +2,16 @@
   "name": "setup-fod-uploader",
   "version": "1.0.0",
   "description": "GitHub Action for setting up FoD Upload Utility",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "ncc build src/main.ts",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write **/*.ts"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build && git add dist/"
+    }
   },
   "repository": {
     "type": "git",
@@ -23,7 +30,12 @@
   "homepage": "https://github.com/fortify-actions/setup-fod-uploader#readme",
   "dependencies": {
     "@actions/core": "^1.2.4",
-    "@actions/tool-cache": "^1.5.5",
-    "path": "^0.12.7"
+    "@actions/tool-cache": "^1.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.9",
+    "eslint": "^7.1.0",
+    "husky": "^4.2.5",
+    "prettier": "^2.0.5"
   }
 }
