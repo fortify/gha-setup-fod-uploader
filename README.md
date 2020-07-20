@@ -25,7 +25,7 @@ steps:
 
 As can be seen in this example, the FoD Uploader can simply be invoked by running `java -jar $FOD_UPLOAD_JAR`. The BSI, user and password (or Personal Access Token) are being passed in to the command via secret environment variables. Obviously, a similar approach could be used to configure API credentails instead of user credentials.
 
-The most common approach for packaging source code before invoking FoD Uploader is by utilizing Fortify ScanCentral Client. This scenario is described in more detail at https://github.com/fortify-actions/setup-scancentral-client#submit-scan-requests-to-fortify-on-demand.
+The most common approach for packaging source code before invoking FoD Uploader is by utilizing Fortify ScanCentral Client. This scenario is described in more detail at https://github.com/fortify/gha-setup-scancentral-client#submit-scan-requests-to-fortify-on-demand.
 
 ## Inputs
 
