@@ -11,7 +11,7 @@ steps:
 - uses: actions/setup-java@v1                 # Set up Java
   with:
     java-version: 1.8
-- uses: fortify-actions/setup-fod-uploader@v1 # Set up FoD Uploader
+- uses: fortify/gha-setup-fod-uploader@v1     # Set up FoD Uploader
   with:
     version: latest                           # Optional as 'latest' is the default
 - env:
