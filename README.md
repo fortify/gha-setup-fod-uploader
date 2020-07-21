@@ -6,26 +6,44 @@ This GitHub Action sets up the Fortify on Demand Uploader for use in your GitHub
 
 ## Usage
 
+FoD Uploader requires source code and dependencies to be packaged into a zip file. A common approach for 
+packaging source code and dependencies is to utilize Fortify ScanCentral Client, as illustrated in the
+following example workflow:
+
 ```yaml
-steps:
-- uses: actions/setup-java@v1                 # Set up Java
-  with:
-    java-version: 1.8
-- uses: fortify/gha-setup-fod-uploader@v1     # Set up FoD Uploader
-  with:
-    version: latest                           # Optional as 'latest' is the default
-- env:
-    FOD_BSI: ${{ secrets.FOD_BSI }}           # Get FoD BSI from GitHub Secrets
-    FOD_USER: ${{ secrets.FOD_USER }}         # Get FoD User from GitHub Secrets
-    FOD_PWD: ${{ secrets.FOD_PWD }}           # Get FoD Password (or Personal Access Token) from GitHub Secrets
-  run: |
-    # To-Do: Add steps to generate zip file to be uploaded to FoD
-    java -jar $FOD_UPLOAD_JAR -bsi "$FOD_BSI" -z sample.zip -uc "$FOD_USER" "$FOD_PWD" -ep 2 -pp 1
+name: Start FoD scan                                    # Name of this workflow
+on: [workflow_dispatch]                                 # Triggers for this workflow; we choose to invoke manually
+jobs:                                                  
+  build:
+    runs-on: ubuntu-latest                              # Use the appropriate runner for building your source code
+
+    steps:
+      - uses: actions/checkout@v2                       # Check out source code
+      - uses: actions/setup-java@v1                     # Set up Java 1.8; required by ScanCentral Client and FoD Uploader
+        with:
+          java-version: 1.8
+      - uses: fortify/gha-setup-scancentral-client@v1   # Set up ScanCentral Client and add to system path
+      - uses: fortify/gha-setup-fod-uploader@v1         # Set up FoD Uploader, set FOD_UPLOAD_JAR variable
+	    
+      - run: scancentral package -bt mvn -o package.zip # Package source code using ScanCentral Client
+	                                                    # Upload package to FoD for scanning
+      - run: java -jar $FOD_UPLOAD_JAR -z package.zip -aurl https://api.ams.fortify.com/ -purl https://ams.fotify.com/ -rid "$FOD_RELEASE_ID" -tc "$FOD_TENANT" -uc "$FOD_USER" "$FOD_PAT" -ep 2 -pp 1
+        env: 
+          FOD_TENANT: FortifyPS  
+          FOD_USER: ${{ secrets.FOD_USER }}
+          FOD_PAT: ${{ secrets.FOD_PAT }}
+          FOD_RELEASE_ID: 250384  
+      - uses: actions/upload-artifact@v2                # Archive ScanCentral logs for debugging purposes
+        if: always()
+        with:
+          name: scancentral-logs
+          path: ~/.fortify/scancentral/log
+      - uses: actions/upload-artifact@v2                # Archive ScanCentral package for debugging purposes
+        if: always()
+        with:
+          name: package
+          path: package.zip
 ```
-
-As can be seen in this example, the FoD Uploader can simply be invoked by running `java -jar $FOD_UPLOAD_JAR`. The BSI, user and password (or Personal Access Token) are being passed in to the command via secret environment variables. Obviously, a similar approach could be used to configure API credentails instead of user credentials.
-
-The most common approach for packaging source code before invoking FoD Uploader is by utilizing Fortify ScanCentral Client. This scenario is described in more detail at https://github.com/fortify/gha-setup-scancentral-client#submit-scan-requests-to-fortify-on-demand.
 
 ## Inputs
 
