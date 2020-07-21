@@ -43,6 +43,17 @@ jobs:
           path: package.zip
 ```
 
+Note that the syntax is slightly different for Windows-based runners. In particular, environment variables 
+in `run` steps are references as `$Env:var` instead of `$var` on Windows-based runners. As such, the command 
+to invoke FoD Uploader would look like the following on Windows:
+
+```
+   - run: java -jar "$Env:FOD_UPLOAD_JAR" -z package.zip -aurl https://api.ams.fortify.com/ -purl https://ams.fotify.com/ -rid "$Env:FOD_RELEASE_ID" -tc "$Env:FOD_TENANT" -uc "$Env:FOD_USER" "$Env:FOD_PAT" -ep 2 -pp 1
+```
+
+Also note that ScanCentral logs are stored in a different location on Windows, so the upload-artifact step
+would need to be adjusted accordingly if you wish to archive ScanCentral logs.
+
 ## Inputs
 
 ### `version`
