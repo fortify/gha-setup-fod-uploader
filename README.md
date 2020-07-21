@@ -24,11 +24,9 @@ jobs:
           java-version: 1.8
       - uses: fortify/gha-setup-scancentral-client@v1   # Set up ScanCentral Client and add to system path
       - uses: fortify/gha-setup-fod-uploader@v1         # Set up FoD Uploader, set FOD_UPLOAD_JAR variable
-	    
       - run: scancentral package -bt mvn -o package.zip # Package source code using ScanCentral Client
-	                                                    # Upload package to FoD for scanning
       - run: java -jar $FOD_UPLOAD_JAR -z package.zip -aurl https://api.ams.fortify.com/ -purl https://ams.fotify.com/ -rid "$FOD_RELEASE_ID" -tc "$FOD_TENANT" -uc "$FOD_USER" "$FOD_PAT" -ep 2 -pp 1
-        env: 
+        env:                                            # Upload package to FoD for scanning
           FOD_TENANT: FortifyPS  
           FOD_USER: ${{ secrets.FOD_USER }}
           FOD_PAT: ${{ secrets.FOD_PAT }}
