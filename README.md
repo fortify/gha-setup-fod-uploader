@@ -49,7 +49,7 @@ jobs:
 ```
 
 This example workflow demonstrates the use of the `fortify/gha-setup-scancentral-client` and `fortify/gha-setup-fod-uploader` actions to set up ScanCentral Client and FoD Uploader respectively, 
-and then invoking these utilities similar to how you would manually run these commands from a command line. All potentially sensitive data is stored in the GitHub secrets storage.
+and then invoking these utilities similar to how you would manually run these commands from a command line. All potentially sensitive data should be stored in the GitHub secrets storage.
 
 Please see the following resources for more information:
 
