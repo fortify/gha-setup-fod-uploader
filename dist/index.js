@@ -3781,7 +3781,6 @@ function main() {
             const version = core.getInput(INPUT_VERSION);
             const toolJar = yield getToolJar(version);
             core.exportVariable('FOD_UPLOAD_JAR', toolJar);
-            core.exportVariable('FOD_UPLOAD_CMD', 'java -jar ' + toolJar);
         }
         catch (error) {
             core.setFailed(error.message);
