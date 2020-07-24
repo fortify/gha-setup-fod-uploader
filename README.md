@@ -49,14 +49,16 @@ jobs:
 ```
 
 This example workflow demonstrates the use of the `fortify/gha-setup-scancentral-client` and `fortify/gha-setup-fod-uploader` actions to set up ScanCentral Client and FoD Uploader respectively, 
-and then invoking these utilities in `run` instructions similar to how you would manually run these commands from a command line. All potentially sensitive data is stored in the GitHub secrets storage.
+and then invoking these utilities similar to how you would manually run these commands from a command line. All potentially sensitive data is stored in the GitHub secrets storage.
+
 Please see the following resources for more information:
 
 * [FoD Uploader documentation](https://github.com/fod-dev/fod-uploader-java)
-* [ScanCentral documentation](https://www.microfocus.com/documentation/fortify-software-security-center/2010/ScanCentral_Help_20.1.0/index.htm#CLI.htm%3FTocPath%3DFortify%2520ScanCentral%2520Command%2520Options%7C_____0)  
-	Note that in combination with FoD Uploader, *only* the ScanCentral `Package` command is relevant. Other ScanCentral commands are not used in combination with FoD Uploader, and none of the other ScanCentral components like ScanCentral Controller or ScanCentral Sensor are used when submitting scans to FoD.
+* [ScanCentral documentation¹](https://www.microfocus.com/documentation/fortify-software-security-center/2010/ScanCentral_Help_20.1.0/index.htm#CLI.htm%3FTocPath%3DFortify%2520ScanCentral%2520Command%2520Options%7C_____0)  
 * [GitHub Action to set up ScanCentral Client](https://github.com/fortify/gha-setup-scancentral-client)
 * [GitHub Workflow documentation](https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow)
+
+¹ Note that in combination with FoD Uploader, *only* the ScanCentral `Package` command is relevant. Other ScanCentral commands are not used in combination with FoD Uploader, and none of the other ScanCentral components like ScanCentral Controller or ScanCentral Sensor are used when submitting scans to FoD.
 
 ### Considerations
 
