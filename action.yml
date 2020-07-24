@@ -1,5 +1,5 @@
-name: 'Setup Fortify on Demand Uploader'
-description: 'Setup Fortify on Demand Uploader'
+name: 'Fortify on Demand Scan'
+description: 'Build secure software fast with Fortify SAST scans'
 author: 'Ruud Senden'
 inputs:
   version:
