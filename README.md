@@ -26,14 +26,14 @@ jobs:
       - uses: actions/setup-java@v1                     # Set up Java 1.8; required by ScanCentral Client and FoD Uploader
         with:
           java-version: 1.8
-		  
-	  ### Set up ScanCentral Client and FoD Uploader ###
+
+      ### Set up ScanCentral Client and FoD Uploader ###
       - uses: fortify/gha-setup-scancentral-client@v1   # Set up ScanCentral Client and add to system path
       - uses: fortify/gha-setup-fod-uploader@v1         # Set up FoD Uploader, set FOD_UPLOAD_JAR variable
-	  
-	  ### Package source code using ScanCentral Client ###
+
+      ### Package source code using ScanCentral Client ###
       - run: scancentral package -bt mvn -o package.zip
-	  
+
       ### Start Fortify on Demand SAST scan ###
       - run: java -jar $FOD_UPLOAD_JAR -z package.zip -aurl https://api.ams.fortify.com/ -purl https://ams.fortify.com/ -rid "$FOD_RELEASE_ID" -tc "$FOD_TENANT" -uc "$FOD_USER" "$FOD_PAT" -ep 2 -pp 1
         env:                                            
@@ -41,7 +41,7 @@ jobs:
           FOD_USER: ${{ secrets.FOD_USER }}
           FOD_PAT: ${{ secrets.FOD_PAT }}
           FOD_RELEASE_ID: ${{ secrets.FOD_RELEASE_ID }} 
-		  
+
       ### Archive ScanCentral logs and package ###
       - uses: actions/upload-artifact@v2                # Archive ScanCentral logs for debugging purposes
         if: always()
