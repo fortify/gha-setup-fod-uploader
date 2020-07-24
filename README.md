@@ -67,7 +67,7 @@ Please see the following resources for more information:
 * Sample workflows:
     * [EightBall](https://github.com/fortify/gha-sample-workflows-eightball/tree/master/.github/workflows)
 	* [SSC JS SandBox](https://github.com/fortify/gha-sample-workflows-ssc-js-sandbox/tree/master/.github/workflows)
-	* [WebGoat.NET](https://github.com/fortify/gha-sample-workflows-WebGoat.NET/tree/master/.github/workflows)
+
 
 ¹ Note that in combination with FoD Uploader, *only* the ScanCentral `Package` command is relevant. Other ScanCentral commands are not used in combination with FoD Uploader, and none of the other ScanCentral components like ScanCentral Controller or ScanCentral Sensor are used when submitting scans to FoD.
 
