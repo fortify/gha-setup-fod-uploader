@@ -89,7 +89,8 @@ Please see the following resources for more information:
     * The FoD release should be configured for automated audit.
     * Typical scan turnaround time should be less than the GitHub Action timeout of 1 hour (scan time is dependent primarily on application size/complexity).
     * Recommended polling interval is 1 minute.
-    * Use the -allowPolicyFail/apf option to determine whether to "break the build" when the scan results in the release failing the assigned Security Policy in FoD.
+    * Use the -allowPolicyFail/apf option if you do **not** want to "break the build" when the scan results in the release failing the assigned Security Policy in FoD.
+    * Example configuration would `FOD_UPLOADER_OPTS: "-ep 2 -pp 0 -I 1 -apf"`
 * .NET applications that utilize msbuild need to use a Windows runner. Windows-based runners use different syntax and different file locations. In particular:
     * Environment variables are referenced as `$Env:var` instead of `$var`, for example `"$Env:FOD_UPLOAD_JAR"` instead of `$FOD_UPLOAD_JAR`
     * ScanCentral logs are stored in a different location, so the upload-artifact step would need to be adjusted accordingly if you wish to archive ScanCentral logs
@@ -99,7 +100,7 @@ Please see the following resources for more information:
 ## Inputs
 
 ### `version`
-**Required** The version of the Fortify Uploader to be set up. Default `latest`.
+**Optional** The version of the Fortify Uploader to be set up. Default `latest`.
 
 ## Outputs
 
