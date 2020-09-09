@@ -1,6 +1,6 @@
 name: 'Fortify on Demand Scan'
 description: 'Build secure software fast with Fortify SAST scans'
-author: 'Ruud Senden'
+author: 'Fortify'
 inputs:
   version:
     description: 'FoDUploader version to use'
