@@ -1,6 +1,6 @@
 # Setup Fortify on Demand Uploader
 
-Build secure software fast with [Fortify](https://www.microfocus.com/en-us/solutions/application-security). Fortify offers end-to-end application security solutions with the flexibility of testing on-premises and on-demand to scale and cover the entire software development lifecycle.  With Fortify, find security issues early and fix at the speed of DevOps. This GitHub Action sets up the Fortify on Demand (FoD) Uploader to integrate Static Application Security Testing (SAST) into your GitHub workflows. This action:
+Build secure software fast with [Fortify](https://www.microfocus.com/en-us/solutions/application-security). Fortify offers end-to-end application security solutions with the flexibility of testing on-premises and on-demand to scale and cover the entire software development lifecycle.  With Fortify, find security issues early and fix at the speed of DevOps. This GitHub Action sets up the Fortify on Demand (FoD) Uploader - also referred to as the FoD Universal CI Tool - to integrate Static Application Security Testing (SAST) into your GitHub workflows. This action:
 * Downloads and caches the specified version of the Fortify on Demand Uploader JAR file
 * Adds the `FOD_UPLOAD_JAR` environment variable containing the full path to the Fortify on Demand Uploader JAR file
 
@@ -34,7 +34,7 @@ on:
       # If this run was triggered by a pull request event, then checkout the head of the pull request instead of the merge commit.
       - run: git checkout HEAD^2
         if: ${{ github.event_name == 'pull_request' }}      
-      # Java 8 required by ScanCentral Client and FoD Uploader(Univeral CI Tool)
+      # Java 8 required by ScanCentral Client and FoD Uploader (Universal CI Tool)
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
