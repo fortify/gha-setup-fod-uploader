@@ -100,7 +100,7 @@ Please see the following resources for more information:
 ## Inputs
 
 ### `version`
-**Optional** The version of the Fortify Uploader to be set up. Default `latest`.
+**Required** The version of the Fortify Uploader to be set up. Default is `latest` if not specified in the workflow.
 
 ## Outputs
 
