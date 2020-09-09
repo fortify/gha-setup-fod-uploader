@@ -43,7 +43,7 @@ on:
       # Prepare source+dependencies for upload. 
       # Update PACKAGE_OPTS based on the ScanCentral Client documentation and your project's included tech stack(s).
       #   ScanCentral Client will download dependencies for maven, gradle and msbuild projects.
-      #   For other build tools, add your build commands to download necessary dependencies and prepare according to Fortify on Demand Packaging documentation.
+      #   For other build tools, add your build commands to the workflow to download necessary dependencies and prepare according to Fortify on Demand Packaging documentation.
       - name: Download Fortify ScanCentral Client
         uses: fortify/gha-setup-scancentral-client@v1
       - name: Package Code + Dependencies
@@ -51,7 +51,7 @@ on:
         env:
           PACKAGE_OPTS: "-bt mvn"
       
-      # Start Fortify on Demand SAST scan and wait until results complete. Be sure to set secrets/variables for your FoD tenant.
+      # Start Fortify on Demand SAST scan. Be sure to set secrets/variables for your desired configuration.
       - name: Download Fortify on Demand Universal CI Tool
         uses: fortify/gha-setup-fod-uploader@v1
       - name: Perform SAST Scan
@@ -88,6 +88,8 @@ Please see the following resources for more information:
 * If you choose to use the polling option when invoking FoDUploader to wait for scan completion:
     * The FoD release should be configured for automated audit.
     * Typical scan turnaround time should be less than the GitHub Action timeout of 1 hour (scan time is dependent primarily on application size/complexity).
+    * Recommended polling interval is 1 minute.
+    * Use the -allowPolicyFail/apf option to determine whether to "break the build" when the scan results in the release failing the assigned Security Policy in FoD.
 * .NET applications that utilize msbuild need to use a Windows runner. Windows-based runners use different syntax and different file locations. In particular:
     * Environment variables are referenced as `$Env:var` instead of `$var`, for example `"$Env:FOD_UPLOAD_JAR"` instead of `$FOD_UPLOAD_JAR`
     * ScanCentral logs are stored in a different location, so the upload-artifact step would need to be adjusted accordingly if you wish to archive ScanCentral logs
