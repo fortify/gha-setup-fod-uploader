@@ -6,7 +6,7 @@ Build secure software fast with [Fortify](https://www.microfocus.com/en-us/solut
 
 ## Usage
 
-FoD Uploader requires source code and dependencies to be packaged into a zip file. We recommend using the Fortify ScanCentral Client to perform the packaging before invoking FoD Uploader, as illustrated in the following example workflow:
+FoD Uploader requires source code and dependencies to be packaged into a zip file. We recommend using the [Fortify ScanCentral Client](https://github.com/marketplace/actions/fortify-scancentral-scan) to perform the packaging before invoking FoD Uploader, as illustrated in the following example workflow:
 
 ```yaml
 name: Fortify on Demand SAST Scan
