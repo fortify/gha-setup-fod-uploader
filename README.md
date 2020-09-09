@@ -9,54 +9,64 @@ Build secure software fast with [Fortify](https://www.microfocus.com/en-us/solut
 FoD Uploader requires source code and dependencies to be packaged into a zip file. We recommend using the Fortify ScanCentral Client to perform the packaging before invoking FoD Uploader, as illustrated in the following example workflow:
 
 ```yaml
-name: FoD SAST scan                                     # Name of this workflow
-on:
-  push:                                                 # Perform Fortify SAST on push and/or pull requests
-    branches:
-      - master
+name: Fortify on Demand SAST Scan
+
+on: 
+  workflow_dispatch:
+  push:
+    branches: [master]
   pull_request:
-    branches:
-      - master
-jobs:                                                  
-  build:
-    runs-on: ubuntu-latest                              # Use the appropriate runner for building your source code
+    # The branches below must be a subset of the branches above
+    branches: [master]
+    
+  FoD-SAST-Scan:
+    # Use the appropriate runner for building your source code. 
+    # Use Windows runner for projects that use msbuild. Additional changes to RUN commands will be required.
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2                       # Check out source code
-      - uses: actions/setup-java@v1                     # Set up Java 1.8; required by ScanCentral Client and FoD Uploader
+      # Check out source code
+      - name: Check Out Source Code
+        uses: actions/checkout@v2
+        with:
+          # Fetch at least the immediate parents so that if this is a pull request then we can checkout the head.
+          fetch-depth: 2
+      # If this run was triggered by a pull request event, then checkout the head of the pull request instead of the merge commit.
+      - run: git checkout HEAD^2
+        if: ${{ github.event_name == 'pull_request' }}      
+      # Java 8 required by ScanCentral Client and FoD Uploader(Univeral CI Tool)
+      - name: Setup Java
+        uses: actions/setup-java@v1
         with:
           java-version: 1.8
-
-      ### Set up ScanCentral Client and FoD Uploader ###
-      - uses: fortify/gha-setup-scancentral-client@v1   # Set up ScanCentral Client and add to system path
-      - uses: fortify/gha-setup-fod-uploader@v1         # Set up FoD Uploader, set FOD_UPLOAD_JAR variable
-
-      ### Package source code using ScanCentral Client ###
-      - run: scancentral package -bt mvn -o package.zip
-
-      ### Start Fortify on Demand SAST scan ###
-      - run: java -jar $FOD_UPLOAD_JAR -z package.zip -aurl https://api.ams.fortify.com/ -purl https://ams.fortify.com/ -rid "$FOD_RELEASE_ID" -tc "$FOD_TENANT" -uc "$FOD_USER" "$FOD_PAT" -ep 2 -pp 1
-        env:                                            
-          FOD_TENANT: ${{ secrets.FOD_TENANT }}
+      
+      # Prepare source+dependencies for upload. 
+      # Update PACKAGE_OPTS based on the ScanCentral Client documentation and your project's included tech stack(s).
+      #   ScanCentral Client will download dependencies for maven, gradle and msbuild projects.
+      #   For other build tools, add your build commands to download necessary dependencies and prepare according to Fortify on Demand Packaging documentation.
+      - name: Download Fortify ScanCentral Client
+        uses: fortify/gha-setup-scancentral-client@v1
+      - name: Package Code + Dependencies
+        run: scancentral package $PACKAGE_OPTS -o package.zip
+        env:
+          PACKAGE_OPTS: "-bt mvn"
+      
+      # Start Fortify on Demand SAST scan and wait until results complete. Be sure to set secrets/variables for your FoD tenant.
+      - name: Download Fortify on Demand Universal CI Tool
+        uses: fortify/gha-setup-fod-uploader@v1
+      - name: Perform SAST Scan
+        run: java -jar $FOD_UPLOAD_JAR -z package.zip -aurl $FOD_API_URL -purl $FOD_URL -rid "$FOD_RELEASE_ID" -tc "$FOD_TENANT" -uc "$FOD_USER" "$FOD_PAT" $FOD_UPLOADER_OPTS
+        env: 
+          FOD_TENANT: ${{ secrets.FOD_TENANT }}  
           FOD_USER: ${{ secrets.FOD_USER }}
           FOD_PAT: ${{ secrets.FOD_PAT }}
-          FOD_RELEASE_ID: ${{ secrets.FOD_RELEASE_ID }} 
-
-      ### Archive ScanCentral logs and package ###
-      - uses: actions/upload-artifact@v2                # Archive ScanCentral logs for debugging purposes
-        if: always()
-        with:
-          name: scancentral-logs
-          path: ~/.fortify/scancentral/log
-      - uses: actions/upload-artifact@v2                # Archive ScanCentral package for debugging purposes
-        if: always()
-        with:
-          name: package
-          path: package.zip
+          FOD_RELEASE_ID: ${{ secrets.FOD_RELEASE_ID }}
+          FOD_URL: "https://ams.fortify.com/"
+          FOD_API_URL: "https://api.ams.fortify.com/"
+          FOD_UPLOADER_OPTS: "-ep 2 -pp 0"
 ```
 
-This example workflow demonstrates the use of the `fortify/gha-setup-scancentral-client` and `fortify/gha-setup-fod-uploader` actions to set up ScanCentral Client and FoD Uploader respectively, 
-and then invoking these utilities similar to how you would manually run these commands from a command line. All potentially sensitive data should be stored in the GitHub secrets storage.
+This example workflow demonstrates the use of the `fortify/gha-setup-scancentral-client` and `fortify/gha-setup-fod-uploader` actions to set up ScanCentral Client and FoD Uploader respectively, and then invoking these utilities similar to how you would manually run these commands from a command line. Configure the environment variables according to your needs. All potentially sensitive data should be stored in the GitHub secrets storage.
 
 Please see the following resources for more information:
 
@@ -73,10 +83,12 @@ Please see the following resources for more information:
 
 ### Considerations
 
-* Be sure to consider the appropriate event triggers in your workflows, based on your project and branching strategy
-* The environment variables and command line arguments in the example workflow can be modified to use API Key authentication instead of a Personal Access Tokens
-* .NET payloads should not be packaged with ScanCentral Client, but rather must be packaged according to the Fortify on Demand guidelines. FoD support for .NET payloads generated by ScanCentral Client is currently in development.
-* Windows-based runners use different syntax and different file locations. In particular:
+* Be sure to consider the appropriate event triggers in your workflows, based on your project and branching strategy.
+* The environment variables and command line arguments in the example workflow can be modified to use API Key authentication instead of a Personal Access Tokens.
+* If you choose to use the polling option when invoking FoDUploader to wait for scan completion:
+    * The FoD release should be configured for automated audit.
+    * Typical scan turnaround time should be less than the GitHub Action timeout of 1 hour (scan time is dependent primarily on application size/complexity).
+* .NET applications that utilize msbuild need to use a Windows runner. Windows-based runners use different syntax and different file locations. In particular:
     * Environment variables are referenced as `$Env:var` instead of `$var`, for example `"$Env:FOD_UPLOAD_JAR"` instead of `$FOD_UPLOAD_JAR`
     * ScanCentral logs are stored in a different location, so the upload-artifact step would need to be adjusted accordingly if you wish to archive ScanCentral logs
 * If you are not already a Fortify customer, check out our [Free Trial](https://www.microfocus.com/en-us/products/application-security-testing/free-trial)
