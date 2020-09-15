@@ -55,7 +55,7 @@ on:
       - name: Download Fortify on Demand Universal CI Tool
         uses: fortify/gha-setup-fod-uploader@v1
       - name: Perform SAST Scan
-        run: java -jar $FOD_UPLOAD_JAR -z package.zip -aurl $FOD_API_URL -purl $FOD_URL -rid "$FOD_RELEASE_ID" -tc "$FOD_TENANT" -uc "$FOD_USER" "$FOD_PAT" $FOD_UPLOADER_OPTS
+        run: java -jar $FOD_UPLOAD_JAR -z package.zip -aurl $FOD_API_URL -purl $FOD_URL -rid "$FOD_RELEASE_ID" -tc "$FOD_TENANT" -uc "$FOD_USER" "$FOD_PAT" $FOD_UPLOADER_OPTS -n "$FOD_UPLOADER_NOTES"
         env: 
           FOD_TENANT: ${{ secrets.FOD_TENANT }}  
           FOD_USER: ${{ secrets.FOD_USER }}
@@ -64,6 +64,7 @@ on:
           FOD_URL: "https://ams.fortify.com/"
           FOD_API_URL: "https://api.ams.fortify.com/"
           FOD_UPLOADER_OPTS: "-ep 2 -pp 0"
+          FOD_UPLOADER_NOTES: 'Triggered by GitHub Actions (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})'
 ```
 
 This example workflow demonstrates the use of the `fortify/gha-setup-scancentral-client` and `fortify/gha-setup-fod-uploader` actions to set up ScanCentral Client and FoD Uploader respectively, and then invoking these utilities similar to how you would manually run these commands from a command line. Configure the environment variables according to your needs. All potentially sensitive data should be stored in the GitHub secrets storage.
@@ -84,7 +85,10 @@ Please see the following resources for more information:
 ### Considerations
 
 * Be sure to consider the appropriate event triggers in your workflows, based on your project and branching strategy.
-* The environment variables and command line arguments in the example workflow can be modified to use API Key authentication instead of a Personal Access Tokens.
+* The command line arguments utilize job environment variables to simplify inputs that should be configured.
+    * Use of GitHub Secrets for credential management are strongly recommended.
+    * Personal Access Tokens require the `api-tenant` scope to invoke FoDUploader.  
+    * Client credentials can be used in place of Personal Access Tokens and require the `Start Scans` (or higher) role.
 * If you choose to use the polling option when invoking FoDUploader to wait for scan completion:
     * The FoD release should be configured for automated audit.
     * Consider the typical scan turnaround time for the project. Many project can be scanned in a matter of minutes once onboarded, but scan time is dependent on application size/complexity.
