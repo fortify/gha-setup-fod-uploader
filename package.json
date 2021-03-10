@@ -1,5 +1,5 @@
 {
-  "name": "setup-fod-uploader",
+  "name": "gha-setup-fod-uploader",
   "version": "1.0.0",
   "description": "GitHub Action for setting up FoD Upload Utility",
   "main": "dist/index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fortify-actions/setup-fod-uploader.git"
+    "url": "git+https://github.com/fortify/gha-setup-fod-uploader.git"
   },
   "keywords": [
     "Fortify",
@@ -25,9 +25,9 @@
   "author": "Ruud Senden",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fortify-actions/setup-fod-uploader/issues"
+    "url": "https://github.com/fortify/gha-setup-fod-uploader/issues"
   },
-  "homepage": "https://github.com/fortify-actions/setup-fod-uploader#readme",
+  "homepage": "https://github.com/fortify/gha-setup-fod-uploader#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/tool-cache": "^1.6.1"
