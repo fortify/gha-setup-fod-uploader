@@ -34,7 +34,10 @@ on:
       # If this run was triggered by a pull request event, then checkout the head of the pull request instead of the merge commit.
       - run: git checkout HEAD^2
         if: ${{ github.event_name == 'pull_request' }}      
-      # Java 8 required by ScanCentral Client and FoD Uploader (Universal CI Tool)
+
+      # Java is required to run ScanCentral Client, and may be required for your build
+      # Java version to use depends on the Java version required to run your build (if any),
+      # and the Java version supported by the ScanCentral Client version that you are running
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
@@ -104,7 +107,7 @@ Please see the following resources for more information:
 ## Inputs
 
 ### `version`
-**Required** The version of the Fortify Uploader to be set up. Default is `latest` if not specified in the workflow.
+**Required** The version of the Fortify Uploader to be set up. Default is `latest` if not specified in the workflow. See [FoD Uploader Releases](https://github.com/fod-dev/fod-uploader-java/releases) for a list of available versions.
 
 ## Outputs
 
