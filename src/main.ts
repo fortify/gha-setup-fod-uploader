@@ -42,8 +42,8 @@ async function main(): Promise<void> {
     const version = core.getInput(INPUT_VERSION);
     const toolJar = await getToolJar(version);
     core.exportVariable('FOD_UPLOAD_JAR', toolJar);
-  } catch (error) {
-    core.setFailed(error.message);
+  } catch (err) {
+    core.setFailed("Action failed with error ${err}");
   } finally {
     core.endGroup();
   }
