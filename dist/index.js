@@ -7214,7 +7214,7 @@ function main() {
             core.exportVariable('FOD_UPLOAD_JAR', toolJar);
         }
         catch (err) {
-            core.setFailed("Action failed with error ${err}");
+            core.setFailed("Action failed with error: " + err);
         }
         finally {
             core.endGroup();
