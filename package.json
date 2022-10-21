@@ -1,6 +1,6 @@
 {
   "name": "gha-setup-fod-uploader",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "GitHub Action for setting up FoD Upload Utility",
   "main": "dist/index.js",
   "scripts": {

@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.3](https://www.github.com/fortify/gha-setup-fod-uploader/compare/v1.1.2...v1.1.3) (2022-10-21)
+
+
+### Bug Fixes
+
+* Fix GitHub NodeJS 12 deprecation warning ([e3ed4c5](https://www.github.com/fortify/gha-setup-fod-uploader/commit/e3ed4c5fcad87a1e4387f1275f26a6c490d3eaa3))
+
 ### [1.1.2](https://www.github.com/fortify/gha-setup-fod-uploader/compare/v1.1.1...v1.1.2) (2022-08-29)
 
 
