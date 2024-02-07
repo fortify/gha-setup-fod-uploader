@@ -4,7 +4,7 @@ This GitHub Action has been deprecated and will no longer be maintained as of De
 
 # Setup Fortify on Demand Uploader
 
-Build secure software fast with [Fortify](https://www.microfocus.com/en-us/solutions/application-security). Fortify offers end-to-end application security solutions with the flexibility of testing on-premises and on-demand to scale and cover the entire software development lifecycle.  With Fortify, find security issues early and fix at the speed of DevOps. This GitHub Action sets up the Fortify on Demand (FoD) Uploader - also referred to as the FoD Universal CI Tool - to integrate Static Application Security Testing (SAST) into your GitHub workflows. This action:
+Build secure software fast with [Fortify](https://www.microfocus.com/en-us/solutions/application-security). Fortify offers end-to-end application security solutions with the flexibility of testing on-premises and on-demand to scale and cover the entire software development lifecycle.  With Fortify, find security issues early and fix them at the speed of DevOps. This GitHub Action sets up the Fortify on Demand (FoD) Uploader - also referred to as the FoD Universal CI Tool - to integrate Static Application Security Testing (SAST) into your GitHub workflows. This action:
 * Downloads and caches the specified version of the Fortify on Demand Uploader JAR file
 * Adds the `FOD_UPLOAD_JAR` environment variable containing the full path to the Fortify on Demand Uploader JAR file
 
@@ -22,7 +22,7 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [master]
-    
+jobs:
   FoD-SAST-Scan:
     # Use the appropriate runner for building your source code. 
     # Use Windows runner for projects that use msbuild. Additional changes to RUN commands will be required.
@@ -31,17 +31,17 @@ on:
     steps:
       # Check out source code
       - name: Check Out Source Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          # Fetch at least the immediate parents so that if this is a pull request then we can checkout the head.
+          # Fetch at least the immediate parents so that if this is a pull request, we can checkout the head.
           fetch-depth: 2
-      # If this run was triggered by a pull request event, then checkout the head of the pull request instead of the merge commit.
+      # If a pull request event triggered this run, checkout the head of the pull request instead of the merge commit.
       - run: git checkout HEAD^2
         if: ${{ github.event_name == 'pull_request' }}      
 
-      # Java is required to run ScanCentral Client, and may be required for your build
-      # Java version to use depends on the Java version required to run your build (if any),
-      # and the Java version supported by the ScanCentral Client version that you are running
+      # Java is required to run ScanCentral Client and may be required for your build.
+      # The Java version to use depends on the Java version required to run your build (if any),
+      # and the Java version supported by the ScanCentral Client version that you are running.
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
@@ -91,14 +91,14 @@ Please see the following resources for more information:
 
 ### Considerations
 
-* Be sure to consider the appropriate event triggers in your workflows, based on your project and branching strategy.
+* Consider the appropriate event triggers in your workflows based on your project and branching strategy.
 * The command line arguments utilize job environment variables to simplify inputs that should be configured.
-    * Use of GitHub Secrets for credential management are strongly recommended.
+    * Use of GitHub Secrets for credential management is strongly recommended.
     * Personal Access Tokens require the `api-tenant` scope to invoke FoDUploader.  
     * Client credentials can be used in place of Personal Access Tokens and require the `Start Scans` (or higher) role.
 * If you choose to use the polling option when invoking FoDUploader to wait for scan completion:
     * The FoD release should be configured for automated audit.
-    * Consider the typical scan turnaround time for the project. Many project can be scanned in a matter of minutes once onboarded, but scan time is dependent on application size/complexity.
+    * Consider the typical scan turnaround time for the project. Many projects can be scanned in minutes once onboarded, but scan time depends on application size/complexity.
     * Recommended polling interval is 1 minute.
     * Use the -allowPolicyFail/apf option if you do **not** want to "break the build" when the scan results in the release failing the assigned Security Policy in FoD.
     * Example configuration: `FOD_UPLOADER_OPTS: "-ep 2 -pp 0 -I 1 -apf"`
@@ -111,7 +111,7 @@ Please see the following resources for more information:
 ## Inputs
 
 ### `version`
-**Required** The version of the Fortify Uploader to be set up. Default is `latest` if not specified in the workflow. See [FoD Uploader Releases](https://github.com/fod-dev/fod-uploader-java/releases) for a list of available versions.
+**Required** The version of the Fortify Uploader to be set up. The default is `latest` if not specified in the workflow. See [FoD Uploader Releases](https://github.com/fod-dev/fod-uploader-java/releases) for a list of available versions.
 
 ## Outputs
 
@@ -121,7 +121,7 @@ Specifies the location of the FoD Uploader JAR file
 
 ## Information for Developers
 
-All commits to the `main` or `master` branch should follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) convention. In particular, commits using the `feat: Some feature` and `fix: Some fix` convention are used to automatically manage version numbers and for updating the [CHANGELOG.md](https://github.com/fortify/gha-setup-fod-uploader/blob/master/CHANGELOG.md) file.
+All commits to the `main` or `master` branch should follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) convention. In particular, commits using the `feat: Some feature` and `fix: Some fix` conventions are used to manage version numbers automatically and for updating the [CHANGELOG.md](https://github.com/fortify/gha-setup-fod-uploader/blob/master/CHANGELOG.md) file.
 
 Whenever changes are pushed to the `main` or `master` branch, the [`.github/workflows/publish-release.yml`](https://github.com/fortify/gha-setup-fod-uploader/blob/master/.github/workflows/publish-release.yml) workflow will be triggered. If there have been any commits with the `feat:` or `fix:` prefixes, the [`release-please-action`](https://github.com/google-github-actions/release-please-action) will generate a pull request with the appropriate changes to the CHANGELOG.md file and version number in `package.json`. If there is already an existing pull request, based on earlier feature or fix commits, the pull request will be updated.
 
